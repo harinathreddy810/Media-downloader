@@ -1,24 +1,37 @@
-body {
-    background: #f4f4f4;
-    font-family: Arial;
+/* Popup */
+.popup {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
 }
 
-.container {
-    width: 400px;
-    margin: 100px auto;
-    background: #fff;
+.popup.hidden {
+    display: none;
+}
+
+.popup-box {
+    background: white;
     padding: 20px;
-    border-radius: 8px;
+    width: 90%;
+    max-width: 320px;
+    border-radius: 10px;
+    text-align: center;
 }
 
-input, button {
-    width: 100%;
-    padding: 10px;
-    margin-top: 10px;
+.popup-box p {
+    margin-bottom: 15px;
+    font-size: 14px;
 }
 
-.note {
-    font-size: 12px;
-    color: gray;
-    margin-top: 10px;
+.popup-box button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    background: #2575fc;
+    color: white;
+    cursor: pointer;
 }

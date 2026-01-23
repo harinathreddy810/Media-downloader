@@ -4,8 +4,10 @@ import subprocess
 from fastapi import FastAPI, Request, Form
 from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI(title="Private Media Downloader")
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DOWNLOAD_DIR = os.path.join(BASE_DIR, "downloads")
@@ -44,8 +46,10 @@ async def download_video(
 )
     if result.returncode != 0:
         return {
-        "error": "Download failed. This platform may be temporarily unsupported or blocked."
+        "status": "error",
+        "message": "Download failed. YouTube and Facebook may have limitations on cloud hosting."
     }
+
 
     for file in os.listdir(DOWNLOAD_DIR):
         if file.startswith(file_id):

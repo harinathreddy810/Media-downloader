@@ -1,19 +1,92 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Media Downloader</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/style.css"/>
 </head>
 <body>
-<div class="container">
-    <h2>Media Downloader</h2>
 
-    <form action="/download" method="post">
-        <input type="text" name="url" placeholder="Paste public video link" required>
-        <button type="submit">Download (Best Quality)</button>
-    </form>
+<div class="page">
+    <div class="card">
+        <h1>Media Downloader</h1>
+        <p class="subtitle">
+            Download public videos from <b>YouTube, Instagram, Facebook & X</b>
+        </p>
 
-    <p class="note">Public videos only. Personal use.</p>
+        <form id="downloadForm">
+            <label>Paste video link</label>
+            <input type="url" id="url" name="url" placeholder="https://..." required />
+
+            <button type="submit">Download (Best Quality)</button>
+        </form>
+
+        <div class="info">
+            <p>✔ Instagram & X – works best</p>
+            <p>✔ YouTube & Facebook – allowed (may have limitations)</p>
+            <p>✔ Public videos only</p>
+        </div>
+
+        <footer>
+            <small>For personal use only</small>
+        </footer>
+    </div>
 </div>
+
+<!-- Popup -->
+<div id="popup" class="popup hidden">
+    <div class="popup-box">
+        <p id="popupMessage"></p>
+        <button onclick="closePopup()">OK</button>
+    </div>
+</div>
+
+<script>
+const form = document.getElementById("downloadForm");
+const popup = document.getElementById("popup");
+const popupMessage = document.getElementById("popupMessage");
+
+form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const url = document.getElementById("url").value;
+
+    popupMessage.innerText = "Downloading... Please wait.";
+    popup.classList.remove("hidden");
+
+    try {
+        const response = await fetch("/download", {
+            method: "POST",
+            body: new URLSearchParams({ url })
+        });
+
+        if (response.headers.get("content-type")?.includes("application/json")) {
+            const data = await response.json();
+            popupMessage.innerText = data.message || "Download failed.";
+        } else {
+            const blob = await response.blob();
+            const downloadUrl = window.URL.createObjectURL(blob);
+
+            const a = document.createElement("a");
+            a.href = downloadUrl;
+            a.download = "video.mp4";
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+
+            popupMessage.innerText = "✅ Download completed successfully!";
+        }
+
+    } catch (err) {
+        popupMessage.innerText = "❌ Something went wrong. Please try again.";
+    }
+});
+
+function closePopup() {
+    popup.classList.add("hidden");
+}
+</script>
+
 </body>
 </html>
