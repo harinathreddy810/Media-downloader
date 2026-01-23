@@ -36,7 +36,16 @@ async def download_video(
         url
     ]
 
-    subprocess.run(command, check=True)
+    result = subprocess.run(
+    command,
+    stdout=subprocess.PIPE,
+    stderr=subprocess.PIPE,
+    text=True
+)
+    if result.returncode != 0:
+        return {
+        "error": "Download failed. This platform may be temporarily unsupported or blocked."
+    }
 
     for file in os.listdir(DOWNLOAD_DIR):
         if file.startswith(file_id):
