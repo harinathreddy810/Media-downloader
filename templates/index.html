@@ -10,22 +10,27 @@
 
 <div class="page">
     <div class="card">
-        <h1>Media Downloader</h1>
+
+        <h1>🎬 Media Downloader</h1>
         <p class="subtitle">
-            Download public videos from <b>YouTube, Instagram, Facebook & X</b>
+            Download public videos from
+            <span class="highlight yt">YouTube</span>,
+            <span class="highlight ig">Instagram</span>,
+            <span class="highlight fb">Facebook</span> &
+            <span class="highlight x">X</span>
         </p>
 
         <form id="downloadForm">
             <label>Paste video link</label>
             <input type="url" id="url" name="url" placeholder="https://..." required />
 
-            <button type="submit">Download (Best Quality)</button>
+            <button type="submit">⬇ Download (Best Quality)</button>
         </form>
 
         <div class="info">
-            <p>✔ Instagram & X – works best</p>
-            <p>✔ YouTube & Facebook – allowed (may have limitations)</p>
-            <p>✔ Public videos only</p>
+            <p class="good">✔ Instagram & X – works best</p>
+            <p class="warn">⚠ YouTube & Facebook – allowed (may have limitations)</p>
+            <p class="neutral">🔓 Public videos only</p>
         </div>
 
         <footer>
@@ -49,10 +54,9 @@ const popupMessage = document.getElementById("popupMessage");
 
 form.addEventListener("submit", async (e) => {
     e.preventDefault();
-
     const url = document.getElementById("url").value;
 
-    popupMessage.innerText = "Downloading... Please wait.";
+    popupMessage.innerText = "⏳ Downloading... Please wait";
     popup.classList.remove("hidden");
 
     try {
@@ -63,10 +67,10 @@ form.addEventListener("submit", async (e) => {
 
         if (response.headers.get("content-type")?.includes("application/json")) {
             const data = await response.json();
-            popupMessage.innerText = data.message || "Download failed.";
+            popupMessage.innerText = "❌ " + (data.message || "Download failed");
         } else {
             const blob = await response.blob();
-            const downloadUrl = window.URL.createObjectURL(blob);
+            const downloadUrl = URL.createObjectURL(blob);
 
             const a = document.createElement("a");
             a.href = downloadUrl;
@@ -77,9 +81,8 @@ form.addEventListener("submit", async (e) => {
 
             popupMessage.innerText = "✅ Download completed successfully!";
         }
-
-    } catch (err) {
-        popupMessage.innerText = "❌ Something went wrong. Please try again.";
+    } catch {
+        popupMessage.innerText = "❌ Network error. Please try again.";
     }
 });
 
