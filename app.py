@@ -5,10 +5,12 @@ from fastapi import FastAPI, Request, Form
 from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.templating import Jinja2Templates
 
-DOWNLOAD_DIR = "downloads"
+app = FastAPI(title="Private Media Downloader")
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DOWNLOAD_DIR = os.path.join(BASE_DIR, "downloads")
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
-app = FastAPI(title="Private Media Downloader")
 templates = Jinja2Templates(directory="templates")
 
 
@@ -20,30 +22,27 @@ async def home(request: Request):
 @app.post("/download")
 async def download_video(
     request: Request,
-    url: str = Form(...),
-    platform: str = Form(...)
+    url: str = Form(...)
 ):
     file_id = str(uuid.uuid4())
-    output_path = os.path.join(DOWNLOAD_DIR, f"{file_id}.%(ext)s")
+    output_template = os.path.join(DOWNLOAD_DIR, f"{file_id}.%(ext)s")
 
-    ydl_cmd = [
+    command = [
         "yt-dlp",
         "-f", "bv*+ba/best",
         "--merge-output-format", "mp4",
-        "-o", output_path,
         "--no-playlist",
+        "-o", output_template,
         url
     ]
 
-    subprocess.run(ydl_cmd, check=True)
+    subprocess.run(command, check=True)
 
-    # Find downloaded file
     for file in os.listdir(DOWNLOAD_DIR):
         if file.startswith(file_id):
             return FileResponse(
                 path=os.path.join(DOWNLOAD_DIR, file),
-                filename=file,
-                media_type="application/octet-stream"
+                filename=file
             )
 
     return {"error": "Download failed"}
