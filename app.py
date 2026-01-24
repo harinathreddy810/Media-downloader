@@ -2,19 +2,13 @@ import os
 import uuid
 import subprocess
 from fastapi import FastAPI, Request, Form
-from fastapi.responses import HTMLResponse, FileResponse, JSONResponse
+from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.templating import Jinja2Templates
-from fastapi.staticfiles import StaticFiles
 
-app = FastAPI(title="Media Downloader")
-
-# Static files
-app.mount("/static", StaticFiles(directory="static"), name="static")
-
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DOWNLOAD_DIR = os.path.join(BASE_DIR, "downloads")
+DOWNLOAD_DIR = "downloads"
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
+app = FastAPI(title="Private Media Downloader")
 templates = Jinja2Templates(directory="templates")
 
 
@@ -24,51 +18,32 @@ async def home(request: Request):
 
 
 @app.post("/download")
-async def download_video(url: str = Form(...)):
+async def download_video(
+    request: Request,
+    url: str = Form(...),
+    platform: str = Form(...)
+):
     file_id = str(uuid.uuid4())
-    output_template = os.path.join(DOWNLOAD_DIR, f"{file_id}.%(ext)s")
+    output_path = os.path.join(DOWNLOAD_DIR, f"{file_id}.%(ext)s")
 
-    command = [
+    ydl_cmd = [
         "yt-dlp",
         "-f", "bv*+ba/best",
         "--merge-output-format", "mp4",
+        "-o", output_path,
         "--no-playlist",
-        "-o", output_template,
         url
     ]
 
-    result = subprocess.run(
-        command,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        text=True
-    )
+    subprocess.run(ydl_cmd, check=True)
 
-    if result.returncode != 0:
-        print("❌ yt-dlp error:", result.stderr)
-        return JSONResponse(
-            status_code=400,
-            content={
-                "status": "error",
-                "message": "Download failed. YouTube and Facebook may have limitations on cloud hosting."
-            }
-        )
-
+    # Find downloaded file
     for file in os.listdir(DOWNLOAD_DIR):
         if file.startswith(file_id):
-            file_path = os.path.join(DOWNLOAD_DIR, file)
-            print("✅ Sending file:", file)
-
             return FileResponse(
-                path=file_path,
+                path=os.path.join(DOWNLOAD_DIR, file),
                 filename=file,
-                media_type="application/octet-stream",
-                headers={
-                    "Content-Disposition": f'attachment; filename="{file}"'
-                }
+                media_type="application/octet-stream"
             )
 
-    return JSONResponse(
-        status_code=404,
-        content={"status": "error", "message": "File not found"}
-    )
+    return {"error": "Download failed"}
