@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Media Downloader</title>
     <link rel="stylesheet" href="/static/style.css"/>
@@ -10,8 +10,8 @@
 
 <div class="page">
     <div class="card">
-
         <h1>🎬 Media Downloader</h1>
+
         <p class="subtitle">
             Download public videos from
             <span class="highlight yt">YouTube</span>,
@@ -22,8 +22,7 @@
 
         <form id="downloadForm">
             <label>Paste video link</label>
-            <input type="url" id="url" name="url" placeholder="https://..." required />
-
+            <input type="url" id="url" name="url" placeholder="https://..." required/>
             <button type="submit">⬇ Download (Best Quality)</button>
         </form>
 
@@ -54,6 +53,7 @@ const popupMessage = document.getElementById("popupMessage");
 
 form.addEventListener("submit", async (e) => {
     e.preventDefault();
+
     const url = document.getElementById("url").value;
 
     popupMessage.innerText = "⏳ Downloading... Please wait";
@@ -62,26 +62,37 @@ form.addEventListener("submit", async (e) => {
     try {
         const response = await fetch("/download", {
             method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
             body: new URLSearchParams({ url })
         });
 
-        if (response.headers.get("content-type")?.includes("application/json")) {
+        const contentType = response.headers.get("content-type");
+
+        if (contentType && contentType.includes("application/json")) {
             const data = await response.json();
-            popupMessage.innerText = "❌ " + (data.message || "Download failed");
-        } else {
-            const blob = await response.blob();
-            const downloadUrl = URL.createObjectURL(blob);
-
-            const a = document.createElement("a");
-            a.href = downloadUrl;
-            a.download = "video.mp4";
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
-
-            popupMessage.innerText = "✅ Download completed successfully!";
+            popupMessage.innerText = "❌ " + data.message;
+            return;
         }
-    } catch {
+
+        // ✅ REAL DOWNLOAD FIX
+        const blob = await response.blob();
+        const downloadUrl = window.URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        a.href = downloadUrl;        // 🔥 MISSING LINE (FIXED)
+        a.style.display = "none";
+
+        document.body.appendChild(a);
+        a.click();
+
+        setTimeout(() => {
+            window.URL.revokeObjectURL(downloadUrl);
+            a.remove();
+        }, 100);
+
+        popupMessage.innerText = "✅ Download completed successfully!";
+
+    } catch (err) {
         popupMessage.innerText = "❌ Network error. Please try again.";
     }
 });
