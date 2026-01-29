@@ -2,21 +2,22 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
 }
 
 /* Background */
 body {
-    background: linear-gradient(135deg, #141e30, #243b55);
     min-height: 100vh;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
 }
 
-/* Center */
+/* Center wrapper */
 .page {
+    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px;
+    padding: 16px;
 }
 
 /* Card */
@@ -24,79 +25,90 @@ body {
     background: #ffffff;
     width: 100%;
     max-width: 420px;
-    padding: 24px;
-    border-radius: 16px;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+    padding: 26px;
+    border-radius: 18px;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+    animation: fadeIn 0.6s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 /* Header */
 h1 {
     text-align: center;
-    margin-bottom: 8px;
+    font-size: 26px;
+    margin-bottom: 6px;
 }
 
 .subtitle {
     text-align: center;
     font-size: 14px;
-    color: #555;
+    color: #666;
     margin-bottom: 22px;
 }
 
 /* Platform colors */
-.highlight {
-    font-weight: bold;
-}
-.yt { color: #ff0000; }
-.ig { color: #e1306c; }
-.fb { color: #1877f2; }
-.x  { color: #000000; }
+.yt { color: #ff0000; font-weight: 600; }
+.ig { color: #e1306c; font-weight: 600; }
+.fb { color: #1877f2; font-weight: 600; }
+.x  { color: #000; font-weight: 600; }
 
 /* Form */
 label {
     font-size: 14px;
+    font-weight: 500;
     color: #333;
+    margin-bottom: 6px;
+    display: block;
 }
 
-input {
+input, select {
     width: 100%;
-    padding: 12px;
-    margin-top: 6px;
-    margin-bottom: 16px;
-    border-radius: 8px;
+    padding: 12px 14px;
+    border-radius: 10px;
     border: 1px solid #ccc;
+    font-size: 15px;
+    margin-bottom: 16px;
+    transition: border 0.2s, box-shadow 0.2s;
 }
 
-input:focus {
+input:focus, select:focus {
     outline: none;
-    border-color: #2575fc;
+    border-color: #2c5364;
+    box-shadow: 0 0 0 2px rgba(44, 83, 100, 0.2);
 }
 
 /* Button */
 button {
     width: 100%;
-    padding: 12px;
-    background: linear-gradient(135deg, #ff512f, #dd2476);
-    color: white;
+    padding: 14px;
+    border-radius: 12px;
     border: none;
-    border-radius: 8px;
     font-size: 16px;
+    font-weight: 600;
     cursor: pointer;
+    background: linear-gradient(135deg, #11998e, #38ef7d);
+    color: #fff;
     transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
 button:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 8px 18px rgba(0,0,0,0.25);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.25);
 }
 
-/* Info */
+/* Info section */
 .info {
     margin-top: 18px;
     font-size: 13px;
+    line-height: 1.5;
 }
 
-.good { color: #2e7d32; margin-bottom: 6px; }
-.warn { color: #f57c00; margin-bottom: 6px; }
+.good { color: #2e7d32; }
+.warn { color: #f57c00; }
 .neutral { color: #555; }
 
 /* Footer */
@@ -104,45 +116,20 @@ footer {
     margin-top: 18px;
     text-align: center;
     font-size: 11px;
-    color: #777;
+    color: #888;
 }
 
-/* Popup */
-.popup {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.6);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.popup.hidden {
-    display: none;
-}
-
-.popup-box {
-    background: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    width: 90%;
-    max-width: 320px;
-    text-align: center;
-}
-
-.popup-box button {
-    margin-top: 12px;
-    padding: 8px 16px;
-    background: #2575fc;
-    border: none;
-    border-radius: 6px;
-    color: #fff;
-    cursor: pointer;
-}
-
-/* Responsive */
+/* Tablet */
 @media (min-width: 768px) {
     .card {
-        max-width: 500px;
+        max-width: 480px;
+        padding: 30px;
+    }
+}
+
+/* Laptop */
+@media (min-width: 1024px) {
+    .card {
+        max-width: 520px;
     }
 }
