@@ -12,8 +12,9 @@
     <div class="card">
 
         <h1>🎬 Media Downloader</h1>
+
         <p class="subtitle">
-            Paste a public video link and download instantly from<br>
+            Paste any public video link and download instantly from<br>
             <span class="yt">YouTube</span> ·
             <span class="ig">Instagram</span> ·
             <span class="fb">Facebook</span> ·
@@ -21,25 +22,25 @@
         </p>
 
         <form action="/download" method="post">
-            <label>🔗 Paste video link</label>
-            <input 
-                type="url" 
-                name="url" 
-                placeholder="https://www.youtube.com/watch?v=..."
+            <label>🔗 Video URL</label>
+            <input
+                type="url"
+                name="url"
+                placeholder="https://paste-your-video-link-here"
                 required
             >
 
-            <button type="submit">⬇ Download Best Quality</button>
+            <button type="submit">⬇ Download Video</button>
         </form>
 
         <div class="info">
-            <p class="good">✅ Auto-detects platform</p>
-            <p class="warn">⚠ Some YouTube / Facebook videos may have limits</p>
-            <p class="neutral">🔓 Public videos only · No login required</p>
+            <p class="good">✨ Platform auto-detected</p>
+            <p class="warn">⚠ Some videos may have restrictions</p>
+            <p class="neutral">🔓 Public videos only · No login needed</p>
         </div>
 
         <footer>
-            <small>⚠ For personal use only</small>
+            <small>For personal use only</small>
         </footer>
 
     </div>
