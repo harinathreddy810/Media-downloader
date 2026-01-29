@@ -1,19 +1,52 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>Media Downloader</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-<div class="container">
-    <h2>Media Downloader</h2>
 
-    <form action="/download" method="post">
-        <input type="text" name="url" placeholder="Paste public video link" required>
-        <button type="submit">Download (Best Quality)</button>
-    </form>
+<div class="page">
+    <div class="card">
 
-    <p class="note">Public videos only. Personal use.</p>
+        <h1>🎬 Media Downloader</h1>
+        <p class="subtitle">
+            Download public videos from
+            <span class="yt">YouTube</span>,
+            <span class="ig">Instagram</span>,
+            <span class="fb">Facebook</span> &
+            <span class="x">X</span>
+        </p>
+
+        <form action="/download" method="post">
+            <label>Paste video link</label>
+            <input type="url" name="url" placeholder="https://..." required>
+
+            <label>Select platform</label>
+            <select name="platform" required>
+                <option value="youtube">YouTube</option>
+                <option value="instagram">Instagram</option>
+                <option value="facebook">Facebook</option>
+                <option value="twitter">Twitter / X</option>
+            </select>
+
+            <button type="submit">⬇ Download (Best Quality)</button>
+        </form>
+
+        <div class="info">
+            <p class="good">✔ Instagram & X – works best</p>
+            <p class="warn">⚠ YouTube & Facebook – allowed (may have limitations)</p>
+            <p class="neutral">🔓 Public videos only</p>
+        </div>
+
+        <footer>
+            <small>For personal use only</small>
+        </footer>
+
+    </div>
 </div>
+
 </body>
 </html>
